@@ -13,6 +13,12 @@
     <bean id="userRole" class="com.rsmart.rfabric.jasperreports.auth.listprovider.Role">
       <property name="roleName" value="ROLE_USER"/>
     </bean>
+    <bean id="customer1Role" class="com.rsmart.rfabric.jasperreports.auth.listprovider.Role">
+      <property name="roleName" value="ROLE_CUSTOMER1"/>
+    </bean>
+    <bean id="customer2Role" class="com.rsmart.rfabric.jasperreports.auth.listprovider.Role">
+      <property name="roleName" value="ROLE_CUSTOMER2"/>
+    </bean>
     <bean id="listUserProvider" class="com.rsmart.rfabric.jasperreports.auth.listprovider.ListUserProvider">
       <property name="users">
         <map>
@@ -32,6 +38,28 @@
               <property name="roles">
                 <list>
                   <ref bean="userRole"/>
+                </list>
+              </property>
+            </bean>
+          </entry>
+          <entry key="test10">
+            <bean class="com.rsmart.rfabric.jasperreports.auth.listprovider.User">
+              <property name="name" value="test10"/>
+              <property name="roles">
+                <list>
+                  <ref bean="customer1Role"/>
+                  <ref bean="userRole"/>
+                </list>
+              </property>
+            </bean>
+          </entry>
+          <entry key="test20">
+            <bean class="com.rsmart.rfabric.jasperreports.auth.listprovider.User">
+              <property name="name" value="test20"/>
+              <property name="roles">
+                <list>
+		  <ref bean="userRole"/>
+                  <ref bean="customer2Role"/>
                 </list>
               </property>
             </bean>
@@ -57,6 +85,7 @@
       </property>
     </bean>       
     <!-- end rFabric Proxy Authentication AuthToken configuration -->
+
     
     <!-- ======================== AUTHENTICATION ======================= -->
     <bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
@@ -847,5 +876,6 @@
             </list>
         </property>
     </bean>
-    
+
+    <bean id="sessionRegistry" class="org.springframework.security.concurrent.SessionRegistryImpl" />
 </beans>

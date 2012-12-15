@@ -1,8 +1,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
     <!-- ======================== FILTER CHAIN =======================
     ACLs later: requestMethodsFilter
@@ -20,9 +18,10 @@
                 CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
                 PATTERN_TYPE_APACHE_ANT
                 /xmla=httpSessionContextIntegrationFilter,${bean.loggingFilter},${bean.basicProcessingFilter},JIAuthenticationSynchronizer,anonymousProcessingFilter,basicAuthExceptionTranslationFilter,filterInvocationInterceptor
-                /services/**=httpSessionContextIntegrationFilter,${bean.loggingFilter},${bean.portletAuthenticationProcessingFilter},${bean.basicProcessingFilter},${bean.passwordExpirationProcessingFilter},JIAuthenticationSynchronizer,anonymousProcessingFilter,wsBasicAuthExceptionTranslationFilter,filterInvocationInterceptor
+                /services/**=httpSessionContextIntegrationFilter,${bean.loggingFilter},${bean.portletAuthenticationProcessingFilter},${bean.basicProcessingFilter},${bean.passwordExpirationProcessingFilter},authTokenFilter,JIAuthenticationSynchronizer,anonymousProcessingFilter,wsBasicAuthExceptionTranslationFilter,filterInvocationInterceptor
                 /rest/login=httpSessionContextIntegrationFilter,${bean.loggingFilter},encryptionFilter,restLoginAuthenticationFilter,JIAuthenticationSynchronizer,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
-                /rest/**=httpSessionContextIntegrationFilter,${bean.loggingFilter},${bean.portletAuthenticationProcessingFilter},${bean.basicProcessingFilter},${bean.passwordExpirationProcessingFilter},JIAuthenticationSynchronizer,anonymousProcessingFilter,wsBasicAuthExceptionTranslationFilter,filterInvocationInterceptor
+                /rest/**=httpSessionContextIntegrationFilter,${bean.loggingFilter},${bean.portletAuthenticationProcessingFilter},${bean.basicProcessingFilter},${bean.passwordExpirationProcessingFilter},authTokenFilter,JIAuthenticationSynchronizer,anonymousProcessingFilter,wsBasicAuthExceptionTranslationFilter,filterInvocationInterceptor
+                /rest_v2/**=httpSessionContextIntegrationFilter,encryptionFilter,webAppSecurityFilter,jsCsrfGuardFilter,${bean.loggingFilter},${bean.userPreferencesFilter},${bean.authenticationProcessingFilter},${bean.userPreferencesFilter},${bean.basicProcessingFilter},requestParameterAuthenticationFilter,authTokenFilter,JIAuthenticationSynchronizer,anonymousProcessingFilter,restExceptionTranslationFilter,filterInvocationInterceptor,switchUserProcessingFilter,iPadSupportFilter
                 /**=httpSessionContextIntegrationFilter,encryptionFilter,multipartRequestWrapperFilter,webAppSecurityFilter,jsCsrfGuardFilter,${bean.loggingFilter},${bean.userPreferencesFilter},${bean.authenticationProcessingFilter},${bean.userPreferencesFilter},${bean.basicProcessingFilter},requestParameterAuthenticationFilter,authTokenFilter,JIAuthenticationSynchronizer,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor,switchUserProcessingFilter,iPadSupportFilter
             </value>
         </property>
@@ -72,6 +71,11 @@
         </property>
     </bean>
 
+    <!-- rFabric Proxy Authentication AuthToken configuration -->
+    <bean id="authTokenFilter" class="com.rsmart.rfabric.jasperreports.auth.RESTTokenAuthenticationFilter">
+      <property name="authenticationManager"><ref local="authenticationManager"/></property>
+    </bean>
+
     <bean id="portletAuthenticationProcessingFilter"
           class="com.jaspersoft.jasperserver.api.metadata.user.service.impl.JIPortletAuthenticationProcessingFilter">
         <property name="trustedIpAddress">
@@ -114,6 +118,12 @@
         </property>
     </bean>
 
+    <bean id="restExceptionTranslationFilter" class="org.springframework.security.ui.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint">
+            <bean class="com.jaspersoft.jasperserver.war.ForbiddenEntryPoint"/>
+        </property>
+    </bean>
+
     <!-- Form-based Authentication
 
    <bean id="exceptionTranslationFilter" class="org.springframework.security.ui.ExceptionTranslationFilter">
@@ -126,6 +136,9 @@
     <bean id="authenticationProcessingFilter" class="com.jaspersoft.jasperserver.api.security.EncryptionAuthenticationProcessingFilter">
         <property name="authenticationManager">
             <ref bean="authenticationManager"/>
+        </property>
+        <property name="sessionRegistry">
+            <ref bean="sessionRegistry"/>
         </property>
         <property name="authenticationFailureUrl">
             <value>/login.html?error=1</value>
@@ -149,11 +162,6 @@
         <property name="authenticationManager">
             <ref bean="authenticationManager"/>
         </property>
-    </bean>
-
-    <!-- rFabric Proxy Authentication AuthToken configuration -->
-    <bean id="authTokenFilter" class="com.rsmart.rfabric.jasperreports.auth.RESTTokenAuthenticationFilter">
-      <property name="authenticationManager"><ref local="authenticationManager"/></property>
     </bean>
 
     <bean id="requestParameterAuthenticationFilter"
@@ -200,6 +208,7 @@
     </bean>
 
     <bean id="jsCsrfGuardFilter" class="com.jaspersoft.jasperserver.api.security.JSCsrfGuardFilter">
+        <property name="loginPageRedirectUrl" value="/login.html"/>
     </bean>
 
     <bean id="encryptionFilter" class="com.jaspersoft.jasperserver.api.security.encryption.EncryptionFilter">
@@ -280,6 +289,11 @@
                 /jrpxml/**=ROLE_USER,ROLE_ADMINISTRATOR
                 /heartbeatinfo.html=ROLE_USER,ROLE_ADMINISTRATOR
                 /rest/**=ROLE_USER,ROLE_ADMINISTRATOR
+                /rest_v2/users/**=ROLE_ADMINISTRATOR
+                /rest_v2/roles/**=ROLE_ADMINISTRATOR
+                /rest_v2/organizations/**=ROLE_ADMINISTRATOR
+                /rest_v2/export/**=ROLE_SUPERUSER
+                /rest_v2/import/**=ROLE_SUPERUSER
                 /404.html=ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMINISTRATOR
                 /500.html=ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMINISTRATOR
                 /reportgenerator.html=ROLE_USER,ROLE_ADMINISTRATOR
