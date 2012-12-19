@@ -7,13 +7,20 @@ authentication between rFabric and JasperReports Server.
 Build Instructions
 ------------------
 
+* Download and unzip [JasperReports 4.7.0 Source](http://community.jaspersoft.com/sites/default/files/releases/jasperreports-server-4.7.0-src.zip). Record the location to which you have unzipped the source. I will refer to that directory as $JASPER_SRC.
+
+* Using Maven 3.0 or greater, build this project with the following command:
+  ```mvn -Djasperserver-repo=$JASPER_SRC/jasperserver-repo clean install```
+
+Install Instructions
+--------------------
+
+* Build this project with the instructions above.
+
 * Download and install [JasperReports Server](http://community.jaspersoft.com/project/jasperreports-server/releases).
 
 * Edit ```src/main/deployfiles/applicationContext.xml``` to set the secret key
 in the ```authTokenAuthenticationProvider``` bean (this MUST match the key used in rFabric)
-
-* Build this project with Maven 3.0 or greater, using the command:
-  ```mvn clean install```
 
 * Deploy the configuration files to Jasper Reports Server:
 
