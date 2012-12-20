@@ -2,7 +2,7 @@ jasper-tokenauth
 ================
 
 Implements Spring Security classes to permit server-to-server proxy token
-authentication between rFabric and JasperReports Server.
+authentication to a JasperReports Server.
 
 Build Instructions
 ------------------
@@ -10,7 +10,7 @@ Build Instructions
 * Download and install [JasperReports Server](http://community.jaspersoft.com/project/jasperreports-server/releases).
 
 * Edit ```src/main/deployfiles/applicationContext.xml``` to set the secret key
-in the ```authTokenAuthenticationProvider``` bean (this MUST match the key used in rFabric)
+in the ```authTokenAuthenticationProvider``` bean (this MUST match the key used in the client application)
 
 * Build this project with Maven 3.0 or greater, using the command:
   ```mvn clean install```
