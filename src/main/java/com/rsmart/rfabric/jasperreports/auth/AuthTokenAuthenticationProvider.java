@@ -71,10 +71,15 @@ public class AuthTokenAuthenticationProvider implements AuthenticationProvider {
 
     final String name = authToken.getName();
     
-    if (!userProvider.userExists(name)) {
-      LOG.error("User does not exist for token " + authToken);
-      authn.setAuthenticated(false);
-      return authn;
+    try {
+      if (!userProvider.userExists(name)) {
+        LOG.error("User does not exist for token " + authToken);
+        authn.setAuthenticated(false);
+        return authn;
+      }
+    } catch (Exception e) {
+      LOG.error ("ExternalUserProvider [" + userProvider.getClass() + "] threw an internal error in userExists()", e);
+      throw new IllegalStateException ("ExternalUserProvider failed on call to userExists()", e);
     }
     
     try {
