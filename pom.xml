@@ -29,12 +29,12 @@
     <dependency>
       <groupId>com.jaspersoft.jasperserver</groupId>
       <artifactId>jasperserver-common-ws</artifactId>
-      <version>4.7.0</version>
+      <version>5.0.0</version>
     </dependency>
     <dependency>
       <groupId>com.jaspersoft.jasperserver</groupId>
       <artifactId>jasperserver-remote-services</artifactId>
-      <version>4.7.0</version>
+      <version>5.0.0</version>
     </dependency>    
     
     <!-- Servlet dependencies -->

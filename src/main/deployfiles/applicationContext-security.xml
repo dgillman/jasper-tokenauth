@@ -874,4 +874,5 @@
         </property>
     </bean>
     
+    <bean id="sessionRegistry" class="org.springframework.security.concurrent.SessionRegistryImpl" />
 </beans>
