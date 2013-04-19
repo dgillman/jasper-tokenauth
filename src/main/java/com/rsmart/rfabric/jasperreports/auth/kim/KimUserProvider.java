@@ -5,17 +5,22 @@ import java.util.List;
 
 import org.kuali.rice.kim.v2_0.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.message.Message;
 
 import org.springframework.security.GrantedAuthority;
 
+import com.rsmart.rfabric.jasperreports.auth.AuthTokenAuthenticationProvider;
 import com.rsmart.rfabric.jasperreports.auth.ExternalUserProvider;
 
 import static com.rsmart.rfabric.logging.FormattedLogger.*;
 
 public class KimUserProvider implements ExternalUserProvider {
+    private static final Log LOG = LogFactory.getLog(KimUserProvider.class);
+
     protected IdentityService_Service identityService;
     protected RoleService_Service roleService;
     protected PermissionService_Service permissionService;
@@ -60,11 +65,13 @@ public class KimUserProvider implements ExternalUserProvider {
     }
 
     public boolean userExists(final String user) throws Exception {
+    	LOG.debug("userExists(\"" + user + "\"");
         return getKimIdentityService().getPrincipalByPrincipalName(new GetPrincipalByPrincipalName() {{ setPrincipalName(user); }}) != null;
     }
 
     @SuppressWarnings("serial")
     public GrantedAuthority[] getAuthoritiesForUser(final String user) {
+    	LOG.debug("getAuthoritiesForUser (\"" + user + "\"");
         final List<GrantedAuthority> authorities = new LinkedList<GrantedAuthority>();
         
         for (final String authorityName : availableAuthorities) {
