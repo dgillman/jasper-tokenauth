@@ -148,13 +148,13 @@
               <sourceRoot>${project.build.directory}/generated/cxf</sourceRoot>
               <wsdlOptions>
                 <wsdlOption>
-                  <wsdl>src/main/resources/wsdl/rice-kim-api-2.1.1-IdentityService.wsdl</wsdl>
+                  <wsdl>src/main/wsdl/rice-kim-api-2.1.1-IdentityService.wsdl</wsdl>
                 </wsdlOption>
                 <wsdlOption>
-                  <wsdl>src/main/resources/wsdl/rice-kim-api-2.1.1-PermissionService.wsdl</wsdl>
+                  <wsdl>src/main/wsdl/rice-kim-api-2.1.1-PermissionService.wsdl</wsdl>
                 </wsdlOption>
                 <wsdlOption>
-                  <wsdl>src/main/resources/wsdl/rice-kim-api-2.1.1-RoleService.wsdl</wsdl>
+                  <wsdl>src/main/wsdl/rice-kim-api-2.1.1-RoleService.wsdl</wsdl>
                 </wsdlOption>
               </wsdlOptions>
 			</configuration>
