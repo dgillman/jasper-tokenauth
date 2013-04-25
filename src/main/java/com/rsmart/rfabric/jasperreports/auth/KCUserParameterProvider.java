@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.jasperreports.engine.JRParameter;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.Authentication;
@@ -12,6 +14,7 @@ import org.springframework.security.context.SecurityContextHolder;
 import com.jaspersoft.jasperserver.api.common.domain.ExecutionContext;
 import com.jaspersoft.jasperserver.api.engine.common.service.BuiltInParameterProvider;
 import com.jaspersoft.jasperserver.api.engine.jasperreports.util.JRQueryExecuterAdapter;
+import com.jaspersoft.jasperserver.api.metadata.user.domain.impl.client.MetadataUserDetails;
 
 public class KCUserParameterProvider implements BuiltInParameterProvider {
 
@@ -38,23 +41,41 @@ public class KCUserParameterProvider implements BuiltInParameterProvider {
 
 	public Object[] getParameter(ExecutionContext context, List jrParameters,
 	   Map parameters, String name) {
-	  LOG.debug("getParameter called");
+	  LOG.debug("getParameter called for param '" + name + "'");
+	  AuthToken token = null;
 	  
 	  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if (auth == null || !(auth.getPrincipal() instanceof AuthTokenAuthentication)) {
-        return null;
+    if (auth != null && auth.getPrincipal() instanceof MetadataUserDetails) {
+      MetadataUserDetails userDetails = (MetadataUserDetails)auth.getPrincipal();
+      Authentication origAuth = userDetails.getOriginalAuthentication();
+      
+      if (origAuth != null && origAuth instanceof AuthTokenAuthentication) {
+        token = (AuthToken) ((AuthTokenAuthentication)origAuth).getCredentials();
+      }
+    }
+
+    if (token == null) {
+      LOG.warn("User has not authenticated with a token from KC - no KC ID or isPI flag will be available");
+      return null;
     }
     
-    AuthToken token = (AuthToken) auth.getCredentials();
+    JRParameter param = null;
+    Object value = null;
     
 	  if (name.equalsIgnoreCase(KCID)) {
-      return new Object[] {JRQueryExecuterAdapter.makeParameter(name, String.class),
-          token.getName() != null ? token.getName() : ""};
+	    LOG.trace("KCID parameter requested");
+	    param = JRQueryExecuterAdapter.makeParameter(name, String.class);
+      value = token.getName() != null ? token.getName() : "";
     } else if (name.equalsIgnoreCase(ISPI)) {
-        return new Object[] {JRQueryExecuterAdapter.makeParameter(name, Boolean.class),
-          new Boolean(token.isPI())};
+      LOG.trace("ISPI parameter requested");
+      param = JRQueryExecuterAdapter.makeParameter(name, Boolean.class);
+      value = new Boolean(token.isPI());
     }
 	  
+    if ( param != null && value != null ) {
+      LOG.trace("returning param: " + param.toString() + " value: " + value.toString());
+      return new Object[] { param, value };
+    }
 		return null;
 	}
 

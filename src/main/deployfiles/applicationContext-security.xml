@@ -55,6 +55,14 @@
 
     <bean id="authTokenAuthenticationProvider" class="com.rsmart.rfabric.jasperreports.auth.AuthTokenAuthenticationProvider">
       <property name="secret" value="secretkey"/>
+      <property name="singleUser" value="joeuser"/>
+      <property name="singleUserAuthorities">
+        <list>
+          <bean class="java.lang.String">
+            <constructor-arg type="String" value="ROLE_USER"/>
+          </bean>
+        </list>
+      </property>
       <property name="externalUserProvider">
         <ref bean="listUserProvider"/>
       </property>

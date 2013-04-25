@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -55,21 +56,54 @@ public class RESTTokenAuthenticationFilter implements Filter, ApplicationContext
      * @return token
      * @throws IllegalArgumentException
      */
+    @SuppressWarnings("unchecked")
     public final AuthToken getToken (final HttpServletRequest request) {
       log.debug("getToken(final HttpServletRequest request)");
       if (request == null) {
         throw new IllegalArgumentException("request == null");
       }
       
+      if (log.isTraceEnabled()) {
+        StringBuilder sb;
+        String delim;
+        Enumeration<String> names;
+        
+        sb = new StringBuilder();
+        names = request.getHeaderNames();
+        delim = "";
+        while (names.hasMoreElements()) {
+          sb.append(delim);
+          sb.append(names.nextElement());
+          delim=", ";
+        }
+        log.trace("headers: " + sb.toString());
+        
+        sb = new StringBuilder();
+        names = request.getParameterNames();
+        delim = "";
+        while (names.hasMoreElements()) {
+          sb.append(delim);
+          sb.append(names.nextElement());
+          delim=", ";
+        }
+        log.trace("params: " + sb.toString());
+      }
       String token = request.getHeader(AUTH_TOKEN_HEADER);
       
       if (token == null) {
         token = request.getParameter(AUTH_TOKEN_PARAM);
+        if (token != null) {
+          log.debug ("token passed as request parameter " + AUTH_TOKEN_PARAM);
+        }
+      } else {
+        log.debug ("token passed as request header " + AUTH_TOKEN_HEADER);
       }
       if (token == null) {
+        log.debug("no authentication token found");
         return null;
       }
       
+      log.debug("retrieved authentication token: " + token);
       return new AuthToken (token);
     }
 
@@ -87,8 +121,8 @@ public class RESTTokenAuthenticationFilter implements Filter, ApplicationContext
       AuthToken credential = getToken(request);
     	
       if(credential == null) {
-    	chain.doFilter(servletRequest, servletResponse);
-    	return;
+    	  chain.doFilter(servletRequest, servletResponse);
+    	  return;
       }
 
       log.debug("request has an AuthToken - attempting to authenticate");

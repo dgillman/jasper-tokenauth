@@ -34,14 +34,14 @@ import org.springframework.util.StringUtils;
 public class AuthTokenAuthenticationProvider implements AuthenticationProvider {
   private static final Log LOG = LogFactory.getLog(AuthTokenAuthenticationProvider.class);
 
-  private static long						DFT_TIMEOUT = 60000l;
+  private static long						             DFT_TIMEOUT = 60000l;
   
-  protected transient Signature 			signature = new Signature();
-  protected transient String 				secret = null;
-  protected transient ExternalUserProvider 	userProvider = null;
-  protected transient String 				singleUser = null;
-  protected transient GrantedAuthority[]	singleUserAuthorities = null;
-  protected transient long					timeout = DFT_TIMEOUT;
+  protected transient Signature 			       signature = new Signature();
+  protected transient String 				         secret = null;
+  protected transient ExternalUserProvider 	 userProvider = null;
+  protected transient String 				         singleUser = null;
+  protected transient GrantedAuthority[]	   singleUserAuthorities = null;
+  protected transient long					         timeout = DFT_TIMEOUT;
   
   public AuthTokenAuthenticationProvider () {}
   
@@ -58,41 +58,39 @@ public class AuthTokenAuthenticationProvider implements AuthenticationProvider {
   }
   
   public void setSingleUser (final String user) {
-	LOG.info("singleUser set to \"" + user + "\"; all successfully authenticated tokens will log in as this user");
-	singleUser = user;
+  	LOG.info("singleUser set to \"" + user + "\"; all successfully authenticated tokens will log in as this user");
+  	this.singleUser = user;
   }
   
   public void setSingleUserAuthorities (final String authorities[]) {
 
-	if (LOG.isInfoEnabled()) {
-	  StringBuilder sb = new StringBuilder();
-	  String delim = "";
-	  for (String authority : authorities) {
-		sb.append(delim).append(authority);
-		delim = ", ";
-	  }
-	  LOG.info("singleUserAuthorities set to [" + sb.toString() + 
-				"] - all users will have these authorities");
-	}
-	
-	singleUserAuthorities = new GrantedAuthority[authorities.length];
-	for (int i = 0; i < authorities.length; i++) {
-      final String authStr = authorities[i];
-	  singleUserAuthorities[i] = new GrantedAuthority() {
-
-		private String authority = authStr;
-		
-		public int compareTo(Object o) {
-		  GrantedAuthority that = (GrantedAuthority)o;
-          return getAuthority().compareTo(that.getAuthority());
-		}
-
-		public String getAuthority() {
-		  return authority;
-		}
-		
-	  };
-	}
+  	if (LOG.isInfoEnabled()) {
+  	  StringBuilder sb = new StringBuilder();
+  	  String delim = "";
+  	  for (String authority : authorities) {
+    		sb.append(delim).append(authority);
+    		delim = ", ";
+  	  }
+  	  LOG.info("singleUserAuthorities set to [" + sb.toString() + 
+  				"] - all users will have these authorities");
+  	}
+  	
+  	singleUserAuthorities = new GrantedAuthority[authorities.length];
+  	for (int i = 0; i < authorities.length; i++) {
+        final String authStr = authorities[i];
+  	  singleUserAuthorities[i] = new GrantedAuthority() {
+    		private String authority = authStr;
+    		
+    		public int compareTo(Object o) {
+    		  GrantedAuthority that = (GrantedAuthority)o;
+              return getAuthority().compareTo(that.getAuthority());
+    		}
+    
+    		public String getAuthority() {
+    		  return authority;
+    		}		
+  	  };
+  	}
   }
   
   public void setTimeout (long timeout) {
@@ -129,7 +127,7 @@ public class AuthTokenAuthenticationProvider implements AuthenticationProvider {
     if (hasTimedOut(authToken)) {
       LOG.warn("Token has timed out: " + authToken.toString());
       authn.setAuthenticated(false);
-      return authn;
+      return null;
     }
     
     final String name = authToken.getName();
