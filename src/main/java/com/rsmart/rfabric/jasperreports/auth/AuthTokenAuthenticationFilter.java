@@ -33,9 +33,9 @@ import java.util.List;
  * parameter. If the AuthToken is found an AuthTokenAuthentication object is constructed
  * and is passed to the Spring Security AuthenticationManager to handle authentication.
  */
-public class RESTTokenAuthenticationFilter implements Filter, ApplicationContextAware  {
+public class AuthTokenAuthenticationFilter implements Filter, ApplicationContextAware  {
 
-    private static final Log log = LogFactory.getLog(RESTTokenAuthenticationFilter.class);
+    private static final Log log = LogFactory.getLog(AuthTokenAuthenticationFilter.class);
     
     public static final String AUTH_TOKEN_HEADER = "x-authn-token";
     public static final String AUTH_TOKEN_PARAM = "authntoken";

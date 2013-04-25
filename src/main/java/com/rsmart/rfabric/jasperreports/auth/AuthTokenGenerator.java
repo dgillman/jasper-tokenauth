@@ -4,6 +4,7 @@ import java.security.InvalidKeyException;
 import java.security.SecureRandom;
 import java.util.Date;
 
+/** This is a commandline utility for generating tokens */
 public class AuthTokenGenerator {
 
   /**

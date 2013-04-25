@@ -9,6 +9,9 @@
 
 
     <!-- rFabric Proxy Authentication AuthToken configuration -->
+    
+    <!--  Uncomment the following to user an external user provider -->
+    <!--
     <bean id="adminRole" class="com.rsmart.rfabric.jasperreports.auth.listprovider.Role">
       <property name="roleName" value="ROLE_ADMINISTRATOR"/>
     </bean>
@@ -52,7 +55,8 @@
         </map>
       </property>
     </bean>
-
+    -->
+    
     <bean id="authTokenAuthenticationProvider" class="com.rsmart.rfabric.jasperreports.auth.AuthTokenAuthenticationProvider">
       <property name="secret" value="secretkey"/>
       <property name="singleUser" value="joeuser"/>
@@ -63,9 +67,12 @@
           </bean>
         </list>
       </property>
+      <!-- uncomment the following to use an external user provider -->
+      <!--
       <property name="externalUserProvider">
         <ref bean="listUserProvider"/>
       </property>
+      -->
     </bean>       
     <!-- end rFabric Proxy Authentication AuthToken configuration -->
     

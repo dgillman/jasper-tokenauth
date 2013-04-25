@@ -668,6 +668,7 @@
         <constructor-arg>
             <list>
                 <bean class="com.jaspersoft.jasperserver.api.engine.jasperreports.util.UserProfileBuiltInParameterProvider"/>
+                <!-- added parameter provider to make KCID and ISPI available to reports -->
                 <bean class="com.rsmart.rfabric.jasperreports.auth.KCUserParameterProvider"/>
             </list>
         </constructor-arg>

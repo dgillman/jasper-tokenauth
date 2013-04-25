@@ -14,6 +14,8 @@
     -->
     <bean id="filterChainProxy" class="org.springframework.security.util.FilterChainProxy">
         <property name="filterInvocationDefinitionSource">
+            <!-- authTokenFilter must be placed **with caution** into these lists. some of the JasperServer filters
+                 will clobber our authentication objects if they execute after our filter -->
             <value>
                 CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
                 PATTERN_TYPE_APACHE_ANT
@@ -159,10 +161,10 @@
         </property>
     </bean>
 
- <!-- rFabric Proxy Authentication AuthToken configuration -->
-     <bean id="authTokenFilter" class="com.rsmart.rfabric.jasperreports.auth.RESTTokenAuthenticationFilter">
-       <property name="authenticationManager"><ref local="authenticationManager"/></property>
-     </bean>
+    <!-- create an AuthTokenAuthenticationFilter to permit proxy authn from Kuali Coeus -->
+    <bean id="authTokenFilter" class="com.rsmart.rfabric.jasperreports.auth.AuthTokenAuthenticationFilter">
+        <property name="authenticationManager"><ref local="authenticationManager"/></property>
+    </bean>
 
     <bean id="requestParameterAuthenticationFilter"
           class="com.jaspersoft.jasperserver.war.util.RequestParameterAuthenticationFilter">

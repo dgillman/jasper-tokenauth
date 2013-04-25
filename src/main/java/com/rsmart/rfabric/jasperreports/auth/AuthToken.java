@@ -7,7 +7,6 @@ import java.util.Date;
  * a user name, a boolan isPI flag ("is principal investigator"), a timestamp, a random 
  * string (a 'nonce'), and a hash.
  * 
- * @author duffy
  */
 public class AuthToken {
   
@@ -40,11 +39,11 @@ public class AuthToken {
       throw new IllegalArgumentException ("malformed token");
     }
     
-    hash 		= parts[0];
-    name 		= parts[1];
-    isPI 		= Boolean.parseBoolean(parts[2]);
-    timestamp 	= new Date(Long.parseLong(parts[3]));
-    nonce 		= parts[4];
+    hash 		     = parts[0];
+    name 		     = parts[1];
+    isPI 		     = Boolean.parseBoolean(parts[2]);
+    timestamp 	 = new Date(Long.parseLong(parts[3]));
+    nonce 		   = parts[4];
   }
   
   public String getHash() {
@@ -68,12 +67,12 @@ public class AuthToken {
   }
  
   public String getHashableFields() {
-	StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
 	
-	sb.append(name).append(TOKEN_SEPARATOR).append(Boolean.toString(isPI))
-	  .append(TOKEN_SEPARATOR).append(timestamp.getTime()).append(TOKEN_SEPARATOR).append(nonce);
+    sb.append(name).append(TOKEN_SEPARATOR).append(Boolean.toString(isPI))
+	    .append(TOKEN_SEPARATOR).append(timestamp.getTime()).append(TOKEN_SEPARATOR).append(nonce);
 	
-	return sb.toString();
+    return sb.toString();
   }
   
   public String toString() {

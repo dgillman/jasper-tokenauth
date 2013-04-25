@@ -16,6 +16,11 @@ import com.jaspersoft.jasperserver.api.engine.common.service.BuiltInParameterPro
 import com.jaspersoft.jasperserver.api.engine.jasperreports.util.JRQueryExecuterAdapter;
 import com.jaspersoft.jasperserver.api.metadata.user.domain.impl.client.MetadataUserDetails;
 
+/**
+ * This class exposes the name and isPI values sent in the AuthToken so they are available to reports.
+ * @author duffy
+ *
+ */
 public class KCUserParameterProvider implements BuiltInParameterProvider {
 
   private static final Log LOG = LogFactory.getLog(KCUserParameterProvider.class);
@@ -29,6 +34,7 @@ public class KCUserParameterProvider implements BuiltInParameterProvider {
 	  LOG.debug("getParameters called");
 	  List<Object[]> userProfileParameters = new ArrayList<Object[]>();
 
+	  // loop through the two parameters we know about and call getParameter for each
     for (String parameterName : new String[] { KCID, ISPI } ) {
         Object[] result = getParameter(context, jrParameters, parameters, parameterName);
         if (result != null) {
@@ -44,6 +50,10 @@ public class KCUserParameterProvider implements BuiltInParameterProvider {
 	  LOG.debug("getParameter called for param '" + name + "'");
 	  AuthToken token = null;
 	  
+	  /*
+	   * we must make sure the user has logged in with our authentication endpoint and thereby
+	   * has an AuthToken with the correct variables.
+	   */
 	  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     if (auth != null && auth.getPrincipal() instanceof MetadataUserDetails) {
       MetadataUserDetails userDetails = (MetadataUserDetails)auth.getPrincipal();
@@ -54,6 +64,7 @@ public class KCUserParameterProvider implements BuiltInParameterProvider {
       }
     }
 
+    // if the user logged in through another endpoint we have nothing for them
     if (token == null) {
       LOG.warn("User has not authenticated with a token from KC - no KC ID or isPI flag will be available");
       return null;
@@ -62,6 +73,7 @@ public class KCUserParameterProvider implements BuiltInParameterProvider {
     JRParameter param = null;
     Object value = null;
     
+    // handle the two variables we know about
 	  if (name.equalsIgnoreCase(KCID)) {
 	    LOG.trace("KCID parameter requested");
 	    param = JRQueryExecuterAdapter.makeParameter(name, String.class);
@@ -72,10 +84,13 @@ public class KCUserParameterProvider implements BuiltInParameterProvider {
       value = new Boolean(token.isPI());
     }
 	  
+	  // return the parameter
     if ( param != null && value != null ) {
       LOG.trace("returning param: " + param.toString() + " value: " + value.toString());
       return new Object[] { param, value };
     }
+    
+    // if we don't know anything about the parameter return null
 		return null;
 	}
 

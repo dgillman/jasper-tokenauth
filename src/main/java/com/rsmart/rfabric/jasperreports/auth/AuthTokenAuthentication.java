@@ -57,10 +57,15 @@ public class AuthTokenAuthentication implements Authentication{
   }
   
   /**
-   * Returns the validated user ID if the token is valid. Returns null if the token is invalid
+   * Returns the validated user ID if the token is valid. Returns null if the token is invalid.
    * 
    */
   public final String getName() {
+    /*
+     * We intentionally do not call AuthToken.getName(). This is because AuthTokenAuthenticationProvider may be configured to
+     * log all users in as the same person. In this case setName() will be called with that single user's name, while
+     * AuthToken.getName() may contain an alternate ID ("KCID") to be used to differnation the user for report generation.
+     */
     LOG.debug("getName(): " + name);
     return name;
   }
@@ -91,7 +96,22 @@ public class AuthTokenAuthentication implements Authentication{
     LOG.debug("getPrincipal(): " + name);
     return getName();
   }
+  
+  public String getKCId() {
+    if (authToken == null) {
+      return null;
+    }
+    return authToken.getName();
+  }
+  
+  public boolean isPI() {
+    return (authToken != null && authToken.isPI());
+  }
 
+  /**
+   * This call may only be used with the parameter 'false' in order to invalidate authentication. Authentication
+   * is determined by having a valid AuthToken and cannot by overridden by calling setAuthenticated(true).
+   */
   public void setAuthenticated(boolean authenticated) throws IllegalArgumentException {
     LOG.debug("setAuthenticated(" + authenticated + ")");
     if (authenticated) {
@@ -99,6 +119,7 @@ public class AuthTokenAuthentication implements Authentication{
       throw new IllegalArgumentException ("Cannot set authenticated to true externally");
     }
     
+    authToken = null;
     name = null;
     authorities = null;
   }
