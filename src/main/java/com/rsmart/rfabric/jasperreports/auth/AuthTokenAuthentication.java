@@ -42,7 +42,7 @@ public class AuthTokenAuthentication implements Authentication{
   protected transient GrantedAuthority[]    authorities = null;
 
   public AuthTokenAuthentication(final AuthToken token) {
-    LOG.debug("new AuthToken(****, " + token + ")");
+    LOG.debug("new AuthToken(\"" + token + "\")");
     
     this.authToken = token;
   }
@@ -91,7 +91,6 @@ public class AuthTokenAuthentication implements Authentication{
     LOG.debug("getPrincipal(): " + name);
     return getName();
   }
-
 
   public void setAuthenticated(boolean authenticated) throws IllegalArgumentException {
     LOG.debug("setAuthenticated(" + authenticated + ")");

@@ -1,6 +1,9 @@
 package com.rsmart.rfabric.jasperreports.auth;
 
 import static org.junit.Assert.*;
+
+import java.util.Date;
+
 import org.junit.Test;
 import org.springframework.security.GrantedAuthority;
 
@@ -8,12 +11,14 @@ public class TestAuthTokenAuthentication {
 
   private static final String HASH = "bogus hash";
   private static final String USER = "jdoe@email.com";
+  private static final String ISPI = "true";
   private static final String NONCE = "nonce";
   
   @Test
   public void testNoNameMeansNotAuthenticated() throws Exception {
     final AuthToken token = new AuthToken (
-        HASH + AuthToken.TOKEN_SEPARATOR + USER + AuthToken.TOKEN_SEPARATOR + NONCE);
+        HASH + AuthToken.TOKEN_SEPARATOR + USER + AuthToken.TOKEN_SEPARATOR 
+        + ISPI + AuthToken.TOKEN_SEPARATOR + (new Date()).getTime() + AuthToken.TOKEN_SEPARATOR + NONCE);
     final AuthTokenAuthentication authn = new AuthTokenAuthentication(token);
 
     assertFalse(authn.isAuthenticated());
@@ -22,7 +27,8 @@ public class TestAuthTokenAuthentication {
   @Test
   public void testSettingNameFlagsAuthenticationAsTrue() throws Exception {
     final AuthToken token = new AuthToken (
-        HASH + AuthToken.TOKEN_SEPARATOR + USER + AuthToken.TOKEN_SEPARATOR + NONCE);
+        HASH + AuthToken.TOKEN_SEPARATOR + USER + AuthToken.TOKEN_SEPARATOR 
+        + ISPI + AuthToken.TOKEN_SEPARATOR + (new Date()).getTime() + AuthToken.TOKEN_SEPARATOR + NONCE);
     final AuthTokenAuthentication authn = new AuthTokenAuthentication(token);
 
     authn.setName(USER);
@@ -32,7 +38,8 @@ public class TestAuthTokenAuthentication {
   @Test
   public void testInvalidateAuthentication() throws Exception {
     final AuthToken token = new AuthToken (
-        HASH + AuthToken.TOKEN_SEPARATOR + USER + AuthToken.TOKEN_SEPARATOR + NONCE);
+        HASH + AuthToken.TOKEN_SEPARATOR + USER + AuthToken.TOKEN_SEPARATOR 
+        + ISPI + AuthToken.TOKEN_SEPARATOR + (new Date()).getTime() + AuthToken.TOKEN_SEPARATOR + NONCE);
     final AuthTokenAuthentication authn = new AuthTokenAuthentication(token);
 
     authn.setName(USER);

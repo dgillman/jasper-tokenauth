@@ -52,32 +52,11 @@
         </map>
       </property>
     </bean>
-    <bean id="kimUserProvider" class="com.rsmart.rfabric.jasperreports.auth.kim.KimUserProvider">
-      <property name="endpointUrl" value="${kim.endpoint.url}" />
-      <property name="availableAuthorities">
-        <list>
-          <value>ROLE_ADMINISTRATOR</value>
-          <value>ROLE_USER</value>
-        </list>
-      </property>
-      <property name="identityService"   ref="identityService" />
-      <property name="permissionService" ref="permissionService" />
-      <property name="roleService"       ref="roleService" />
-    </bean>
-    <bean id="identityService"   class="org.kuali.rice.kim.v2_0.IdentityService_Service">
-      <constructor-arg value="${kim.endpoint.url}/identityService?wsdl"/>
-    </bean>
-    <bean id="permissionService" class="org.kuali.rice.kim.v2_0.PermissionService_Service">
-      <constructor-arg value="${kim.endpoint.url}/permissionService?wsdl"/>
-    </bean>
-    <bean id="roleService"       class="org.kuali.rice.kim.v2_0.RoleService_Service">
-      <constructor-arg value="${kim.endpoint.url}/roleService?wsdl"/>
-    </bean>
 
     <bean id="authTokenAuthenticationProvider" class="com.rsmart.rfabric.jasperreports.auth.AuthTokenAuthenticationProvider">
       <property name="secret" value="secretkey"/>
       <property name="externalUserProvider">
-        <ref bean="kimUserProvider"/>
+        <ref bean="listUserProvider"/>
       </property>
     </bean>       
     <!-- end rFabric Proxy Authentication AuthToken configuration -->

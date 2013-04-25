@@ -18,13 +18,6 @@
   </properties>
   
   <dependencies>
-    <!-- Web Services dependencies -->
-    <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-bundle</artifactId>
-      <version>${cxf.version}</version>
-    </dependency>
-    
     <!-- JasperReports dependencies -->
     <dependency>
       <groupId>com.jaspersoft.jasperserver</groupId>
@@ -134,47 +127,6 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>  
-      <plugin>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-codegen-plugin</artifactId>
-        <version>${cxf.version}</version>
-        <executions>
-          <execution>
-			<id>generate-sources</id>
-			<phase>generate-sources</phase>
-			<configuration>
-              <sourceRoot>${project.build.directory}/generated/cxf</sourceRoot>
-              <wsdlOptions>
-                <wsdlOption>
-                  <wsdl>src/main/wsdl/rice-kim-api-2.1.1-IdentityService.wsdl</wsdl>
-                </wsdlOption>
-                <wsdlOption>
-                  <wsdl>src/main/wsdl/rice-kim-api-2.1.1-PermissionService.wsdl</wsdl>
-                </wsdlOption>
-                <wsdlOption>
-                  <wsdl>src/main/wsdl/rice-kim-api-2.1.1-RoleService.wsdl</wsdl>
-                </wsdlOption>
-              </wsdlOptions>
-			</configuration>
-			<goals>
-              <goal>wsdl2java</goal>
-			</goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.kuali.rice</groupId>
-            <artifactId>rice-kim-api</artifactId>
-            <version>${rice.version}</version>
-            <classifier>PermissionService</classifier>
-            <type>wsdl</type>
-          </dependency>
-        </dependencies>
-      </plugin>      
-    </plugins>
-  </build>
   <repositories>
     <repository>
       <id>js-repo-svn</id>

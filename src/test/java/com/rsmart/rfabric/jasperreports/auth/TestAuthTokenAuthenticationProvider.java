@@ -3,6 +3,7 @@ package com.rsmart.rfabric.jasperreports.auth;
 import static org.junit.Assert.*;
 
 import java.security.SecureRandom;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,12 +49,10 @@ public class TestAuthTokenAuthenticationProvider {
     authnProvider.setSecret(SECRET_KEY);
   }
   
-  protected String generateToken (final String user) throws Exception {
-    byte bytes[] = new byte[20];
-    secRand.nextBytes(bytes);
-    
-    final String nonce = new String(bytes);
-    final String toSign = user + AuthToken.TOKEN_SEPARATOR + nonce;
+  protected String generateToken (final String user, final boolean isPi) throws Exception {
+    final String nonce = Integer.toString(secRand.nextInt(20));
+    final String toSign = user + AuthToken.TOKEN_SEPARATOR + Boolean.toString(isPi) + AuthToken.TOKEN_SEPARATOR + (new Date()).getTime()
+        + AuthToken.TOKEN_SEPARATOR + nonce;
     final String hmac = signature.calculateRFC2104HMACWithEncoding(toSign, SECRET_KEY, true);
     
     return hmac + AuthToken.TOKEN_SEPARATOR + toSign;
@@ -61,7 +60,7 @@ public class TestAuthTokenAuthenticationProvider {
   
   @Test
   public void testAuthenticateValidToken() throws Exception {
-    final String token = generateToken(JOHNDOE);
+    final String token = generateToken(JOHNDOE, true);
     
     AuthToken authToken = new AuthToken(token);
     AuthTokenAuthentication authentication = new AuthTokenAuthentication(authToken);
@@ -80,7 +79,7 @@ public class TestAuthTokenAuthenticationProvider {
 
   @Test
   public void testAuthenticateInvalidToken() throws Exception {
-    final String token = generateToken(NOTAUSER);
+    final String token = generateToken(NOTAUSER, true);
     
     AuthToken authToken = new AuthToken(token);
     AuthTokenAuthentication authentication = new AuthTokenAuthentication(authToken);

@@ -80,26 +80,26 @@ public class RESTTokenAuthenticationFilter implements Filter, ApplicationContext
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
         throws IOException, ServletException {
 
-    	final HttpServletRequest request = (HttpServletRequest) servletRequest;
-    	final HttpServletResponse response = (HttpServletResponse) servletResponse;
+   	  final HttpServletRequest request = (HttpServletRequest) servletRequest;
+      final HttpServletResponse response = (HttpServletResponse) servletResponse;
 
       //create credentials
-    	AuthToken credential = getToken(request);
+      AuthToken credential = getToken(request);
     	
-    	if(credential == null) {
-    	  chain.doFilter(servletRequest, servletResponse);
-    	  return;
-    	}
+      if(credential == null) {
+    	chain.doFilter(servletRequest, servletResponse);
+    	return;
+      }
 
-    	log.debug("request has an AuthToken - attempting to authenticate");
+      log.debug("request has an AuthToken - attempting to authenticate");
     	
-    	//create Authentication object
-    	AuthTokenAuthentication authToken = new AuthTokenAuthentication(credential);
+      //create Authentication object
+      AuthTokenAuthentication authentication = new AuthTokenAuthentication(credential);
 
-    	//call authenticationManager.authenticate
+      //call authenticationManager.authenticate
       Authentication authResult;
       try {
-        authResult = authenticationManager.authenticate(authToken);
+        authResult = authenticationManager.authenticate(authentication);
       } catch (AuthenticationException e) {
         if (log.isDebugEnabled()) {
           log.debug("Token " + credential + " failed to authenticate: " + e.toString());
@@ -119,7 +119,7 @@ public class RESTTokenAuthenticationFilter implements Filter, ApplicationContext
       }
 
       if (log.isDebugEnabled()) {
-        log.debug("User " + authToken.getName() + " authenticated: " + authResult);
+        log.debug("User " + authentication.getName() + " authenticated: " + authResult);
       }
 
       SecurityContextHolder.getContext().setAuthentication(authResult);
