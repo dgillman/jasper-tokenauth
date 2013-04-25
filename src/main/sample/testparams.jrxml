@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenNoDataType="AllSectionsNoDetail" uuid="e3da4ed9-f66b-4fb9-a3a3-0b5dc17bf41a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="KCID" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="ISPI" class="java.lang.Boolean" isForPrompting="false"/>
+	<title>
+		<band height="184" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c2f28216-bf5f-4ab5-ae09-2e871ba22bc4" x="181" y="32" width="362" height="30"/>
+				<textElement>
+					<font size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{KCID}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a8264227-c74d-4df6-bf0c-d1c437440974" x="181" y="100" width="362" height="30"/>
+				<textElement>
+					<font size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{ISPI}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dccdb152-1fbf-4dd1-9e6f-2d4bedfbcaa1" x="13" y="32" width="140" height="30"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KC Identifier:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dccdb152-1fbf-4dd1-9e6f-2d4bedfbcaa1" x="13" y="100" width="140" height="30"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Is PI:]]></text>
+			</staticText>
+		</band>
+	</title>
+</jasperReport>
